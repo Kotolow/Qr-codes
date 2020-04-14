@@ -15,6 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+
     <ClInclude Include="dataEncoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -24,6 +25,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
