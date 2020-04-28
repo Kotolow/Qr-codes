@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     string tx = "https://bitbucket.org/trbogdanov/qr-codes-9375/src/master/";
-    dataEncoder *sequence = new dataEncoder(tx);
+    DataEncoder *sequence = new DataEncoder(tx);
     for (int n : sequence->sequenceOfBit)
     {
         cout << n;
