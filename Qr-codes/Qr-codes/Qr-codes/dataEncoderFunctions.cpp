@@ -6,7 +6,7 @@
 #include "dataEncoder.h"
 using namespace std;
 
-DataEncoder::DataEncoder(const string &tx)
+DataEncoder::DataEncoder(const std::string &tx)
 {
     amount = tx.size();
     binaryConverter(tx, sequenceOfBit, amount);
@@ -57,7 +57,7 @@ DataEncoder::DataEncoder(const string &tx)
     bitToIntConverter(sequenceOfBit, sequenceOfByte, maxAmountOfBits);
     blockFiller(sequenceOfByte, blocks, amountOfBlocks, byteInBlock, additionalBlocks);
 }
-void DataEncoder::binaryConverter(string tx, vector<bool> &sequenceOfBit, int amount)
+void DataEncoder::binaryConverter(const std::string &tx, vector<bool> &sequenceOfBit, int amount)
 /*функция предназначенная, для преобразования строки текста(текстового массива) в
 строку бинарного кода (массив, содержащий значения бит)[пункт 1];
 string tx - текст, который нужно переводить
@@ -362,7 +362,7 @@ void DataEncoder::addition2()
     sequenceOfBit.push_back(0);
     sequenceOfBit.push_back(1);
 }
-void DataEncoder::bitToIntConverter(vector<bool> sequenceOfBit, vector<int> &sequenceOfByte,
+void DataEncoder::bitToIntConverter(const vector<bool> &sequenceOfBit, vector<int> &sequenceOfByte,
                                     int maxAmountOfBits)
 { //функция для перевода последовательности бит в последовательность байт
     int bitIndex = 0;
@@ -377,7 +377,7 @@ void DataEncoder::bitToIntConverter(vector<bool> sequenceOfBit, vector<int> &seq
         sequenceOfByte.push_back(sum);
     }
 }
-void DataEncoder::blockFiller(vector<int> sequenceOfByte, vector<vector<int> > blocks,
+void DataEncoder::blockFiller(const vector<int> &sequenceOfByte, vector<vector<int> > &blocks,
                               int amountOfBlocks, int byteInBlock, int additionalBlocks)
 { //Функция для заполнения блоков последовательностью байт
     int byteIndex = 0; //индекс заполнения байтов

@@ -8,7 +8,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string tx = "https://bitbucket.org/trbogdanov/qr-codes-9375/src/master/";
+    std::string tx = "https://bitbucket.org/trbogdanov/qr-codes-9375/src/master/";
     DataEncoder *sequence = new DataEncoder(tx);
     for (int n : sequence->sequenceOfBit)
     {
