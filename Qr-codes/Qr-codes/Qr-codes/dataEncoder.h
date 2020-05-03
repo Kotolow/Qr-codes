@@ -1,12 +1,13 @@
-﻿#pragma once
-using namespace std;
+﻿﻿#pragma once
+#include <vector>
+class string;
 
 class DataEncoder
 {
   public:
-    vector<bool> sequenceOfBit; //последовательность бит
-    vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
-    DataEncoder(const string &tx);
+    std::vector<bool> sequenceOfBit; //последовательность бит
+    std::vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
+    DataEncoder(const std::string &tx);
     ~DataEncoder() = default;
 
   private:
@@ -19,15 +20,16 @@ class DataEncoder
     int amountOfBlocks; //кол-во блоков битов
     int byteInBlock; //кол-во бит в нормальном блоке
     int additionalBlocks; //кол-во дополненных блоков(бит на 1 больше чем в обычном)
-    vector<vector<int> > blocks; //массив блоков
-                                 //прототипы функций:
-    void binaryConverter(string tx, vector<bool> &sequenceOfBit, int amount);
-    int versionNumber(int amountOfBits, int &maxAmountOfBits, int &amountOfBlocks);
-    void intToBinary(int amount, int amountOfData, vector<bool> &serviceInf);
+    std::vector<std::vector<int> > blocks; //массив блоков
+  private:
+    void binaryConverter(const std::string &tx, std::vector<bool> &sequenceOfBit, int amount);
+    int versionNumber(int amountOfBits, int &maxAmountOfBits, int &amountOfBlocks,
+                      int &amountOfCorrectionBytes);
+    void intToBinary(int amount, int amountOfData, std::vector<bool> &serviceInf);
     void addition1();
     void addition2();
-    void bitToIntConverter(vector<bool> sequenceOfBit, vector<int> &sequenceOfByte,
+    void bitToIntConverter(const std::vector<bool> &sequenceOfBit, std::vector<int> &sequenceOfByte,
                            int maxAmountOfBits);
-    void blockFiller(vector<int> sequenceOfByte, vector<vector<int> > blocks, int amountOfBlocks,
-                     int byteInBlock, int additionalBlocks);
+    void blockFiller(const std::vector<int> &sequenceOfByte, std::vector<std::vector<int>> &blocks,
+                     int amountOfBlocks, int byteInBlock, int additionalBlocks);
 };
