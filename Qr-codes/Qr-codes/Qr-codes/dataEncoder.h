@@ -5,13 +5,13 @@ class string;
 class DataEncoder
 {
   public:
-    std::vector<bool> sequenceOfBit; //последовательность бит
-    std::vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
     std::vector<int> sequenceFinal; // конечная последовательность байт
     DataEncoder(const std::string &tx);
     ~DataEncoder() = default;
 
   private:
+    std::vector<bool> sequenceOfBit; //последовательность бит
+    std::vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
     int amount; //кол-во символов в тексте
     int version; //номер версии
     int amountOfBits; //кол-во бит в тексте
