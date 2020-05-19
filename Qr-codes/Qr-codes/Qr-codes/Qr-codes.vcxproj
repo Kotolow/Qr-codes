@@ -114,12 +114,13 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
+
     <ClInclude Include="dataEncoder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dataEncoderFunctions.cpp" />
     <ClCompile Include="main.cpp" />
+
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
