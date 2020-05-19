@@ -115,6 +115,8 @@
     </Link>
   </ItemDefinitionGroup>
 
+
+
   <ItemGroup>
 
 
@@ -123,6 +125,8 @@
   <ItemGroup>
     <ClCompile Include="dataEncoderFunctions.cpp" />
     <ClCompile Include="main.cpp" />
+
+
 
 
 
