@@ -1,12 +1,13 @@
 ﻿#include "dataEncoder.h"
 using namespace std;
-
 DataEncoder::DataEncoder(const std::string &tx)
 {
     amount = tx.size();
     binaryConverter(tx, sequenceOfBit, amount);
     amountOfBits = amount * 8;
+
     version = versionNumber(amountOfBits, maxAmountOfBits, amountOfBlocks, amountOfCorrectionBytes);
+
     if (version <= 9)
     {
         amountOfData = 8;
@@ -51,6 +52,7 @@ DataEncoder::DataEncoder(const std::string &tx)
     additionalBlocks = (sequenceOfBit.size() / 8) % amountOfBlocks;
     bitToIntConverter(sequenceOfBit, sequenceOfByte, maxAmountOfBits);
     blockFiller(sequenceOfByte, blocks, amountOfBlocks, byteInBlock, additionalBlocks);
+
     polynomGenerator(generatingPolynom);
     correctionByteGenerator(correctionByteBlocks, blocks, generatingPolynom);
     blocksMerging(sequenceFinal, correctionByteBlocks, blocks);
@@ -65,21 +67,26 @@ vector<bool> &sequenceOfBit - ссылка на массив битов (чер�
     for (int r = 0; r < amount; ++r)
     {
         for (int shift = 7, i = 0; shift >= 0; --shift, ++i)
+
         {
             sequenceOfBit.push_back(tx[r] & (1 << shift));
         }
     }
 }
+
 int DataEncoder::versionNumber(int amountOfBits, int &maxAmountOfBits, int &amountOfBlocks,
                                int &amountOfCorrectionBytes)
 {
     // эта функция определяет номер версии, максимальное кол-во бит, кол-во блоков и кол-во байтов
     // коррекции
+
     if (amountOfBits < 128)
     {
         maxAmountOfBits = 128;
         amountOfBlocks = 1;
+
         amountOfCorrectionBytes = 10;
+
         return 1;
     }
 
@@ -87,272 +94,349 @@ int DataEncoder::versionNumber(int amountOfBits, int &maxAmountOfBits, int &amou
     {
         maxAmountOfBits = 224;
         amountOfBlocks = 1;
+
         amountOfCorrectionBytes = 16;
+
         return 2;
     }
     else if (amountOfBits < 352)
     {
         maxAmountOfBits = 352;
         amountOfBlocks = 1;
+
         amountOfCorrectionBytes = 26;
+
         return 3;
     }
     else if (amountOfBits < 512)
     {
         maxAmountOfBits = 512;
         amountOfBlocks = 2;
+
         amountOfCorrectionBytes = 18;
+
         return 4;
     }
     else if (amountOfBits < 688)
     {
         maxAmountOfBits = 688;
         amountOfBlocks = 2;
+
         amountOfCorrectionBytes = 24;
+
         return 5;
     }
     else if (amountOfBits < 864)
     {
         maxAmountOfBits = 864;
         amountOfBlocks = 4;
+
         amountOfCorrectionBytes = 16;
+
         return 6;
     }
     else if (amountOfBits < 992)
     {
         maxAmountOfBits = 992;
         amountOfBlocks = 4;
+
         amountOfCorrectionBytes = 18;
+
         return 7;
     }
     else if (amountOfBits < 1232)
     {
         maxAmountOfBits = 1232;
         amountOfBlocks = 4;
+
         amountOfCorrectionBytes = 22;
+
         return 8;
     }
     else if (amountOfBits < 1456)
     {
         maxAmountOfBits = 1456;
         amountOfBlocks = 5;
+
         amountOfCorrectionBytes = 22;
+
         return 9;
     }
     else if (amountOfBits < 1728)
     {
         maxAmountOfBits = 1728;
         amountOfBlocks = 5;
+
         amountOfCorrectionBytes = 26;
+
         return 10;
     }
     else if (amountOfBits < 2032)
     {
         maxAmountOfBits = 2032;
         amountOfBlocks = 5;
+
         amountOfCorrectionBytes = 30;
+
         return 11;
     }
     else if (amountOfBits < 2320)
     {
         maxAmountOfBits = 2320;
         amountOfBlocks = 8;
+
         amountOfCorrectionBytes = 22;
+
         return 12;
     }
     else if (amountOfBits < 2672)
     {
         maxAmountOfBits = 2672;
         amountOfBlocks = 9;
+
         amountOfCorrectionBytes = 22;
+
         return 13;
     }
     else if (amountOfBits < 2920)
     {
         maxAmountOfBits = 2920;
         amountOfBlocks = 9;
+
         amountOfCorrectionBytes = 24;
+
         return 14;
     }
     else if (amountOfBits < 3320)
     {
         maxAmountOfBits = 3320;
         amountOfBlocks = 10;
+
         amountOfCorrectionBytes = 24;
+
         return 15;
     }
     else if (amountOfBits < 3624)
     {
         maxAmountOfBits = 3624;
         amountOfBlocks = 10;
+
         amountOfCorrectionBytes = 28;
+
         return 16;
     }
     else if (amountOfBits < 4056)
     {
         maxAmountOfBits = 4056;
         amountOfBlocks = 11;
+
         amountOfCorrectionBytes = 28;
+
         return 17;
     }
     else if (amountOfBits < 4504)
     {
         maxAmountOfBits = 4504;
         amountOfBlocks = 13;
+
         amountOfCorrectionBytes = 26;
+
         return 18;
     }
     else if (amountOfBits < 5016)
     {
         maxAmountOfBits = 5016;
         amountOfBlocks = 14;
+
         amountOfCorrectionBytes = 26;
+
         return 19;
     }
     else if (amountOfBits < 5352)
     {
         maxAmountOfBits = 5352;
         amountOfBlocks = 16;
+
         amountOfCorrectionBytes = 26;
+
         return 20;
     }
     else if (amountOfBits < 5712)
     {
         maxAmountOfBits = 5712;
         amountOfBlocks = 17;
+
         amountOfCorrectionBytes = 26;
+
         return 21;
     }
     else if (amountOfBits < 6256)
     {
         maxAmountOfBits = 6256;
         amountOfBlocks = 17;
+
         amountOfCorrectionBytes = 28;
+
         return 22;
     }
     else if (amountOfBits < 6880)
     {
         maxAmountOfBits = 6880;
         amountOfBlocks = 18;
+
         amountOfCorrectionBytes = 28;
+
         return 23;
     }
     else if (amountOfBits < 7312)
     {
         maxAmountOfBits = 7312;
         amountOfBlocks = 20;
+
         amountOfCorrectionBytes = 28;
+
         return 24;
     }
     else if (amountOfBits < 8000)
     {
         maxAmountOfBits = 8000;
         amountOfBlocks = 21;
+
         amountOfCorrectionBytes = 28;
+
         return 25;
     }
     else if (amountOfBits < 8496)
     {
         maxAmountOfBits = 8496;
         amountOfBlocks = 23;
+
         amountOfCorrectionBytes = 28;
+
         return 26;
     }
     else if (amountOfBits < 9024)
     {
         maxAmountOfBits = 9024;
         amountOfBlocks = 25;
+
         amountOfCorrectionBytes = 28;
+
         return 27;
     }
     else if (amountOfBits < 9544)
     {
         maxAmountOfBits = 9544;
         amountOfBlocks = 26;
+
         amountOfCorrectionBytes = 28;
+
         return 28;
     }
     else if (amountOfBits < 10136)
     {
         maxAmountOfBits = 10136;
         amountOfBlocks = 28;
+
         amountOfCorrectionBytes = 28;
+
         return 29;
     }
     else if (amountOfBits < 10984)
     {
         maxAmountOfBits = 10984;
         amountOfBlocks = 29;
+
         amountOfCorrectionBytes = 28;
+
         return 30;
     }
     else if (amountOfBits < 11640)
     {
         maxAmountOfBits = 11640;
         amountOfBlocks = 31;
+
         amountOfCorrectionBytes = 28;
+
         return 31;
     }
     else if (amountOfBits < 12328)
     {
         maxAmountOfBits = 12328;
         amountOfBlocks = 33;
+
         amountOfCorrectionBytes = 28;
+
         return 32;
     }
     else if (amountOfBits < 13048)
     {
         maxAmountOfBits = 13048;
         amountOfBlocks = 35;
+
         amountOfCorrectionBytes = 28;
+
         return 33;
     }
     else if (amountOfBits < 13800)
     {
         maxAmountOfBits = 13800;
         amountOfBlocks = 37;
+
         amountOfCorrectionBytes = 28;
+
         return 34;
     }
     else if (amountOfBits < 14496)
     {
         maxAmountOfBits = 14496;
         amountOfBlocks = 38;
+
         amountOfCorrectionBytes = 28;
+
         return 35;
     }
     else if (amountOfBits < 15312)
     {
         maxAmountOfBits = 15312;
         amountOfBlocks = 40;
+
         amountOfCorrectionBytes = 28;
+
         return 36;
     }
     else if (amountOfBits < 15936)
     {
         maxAmountOfBits = 15936;
         amountOfBlocks = 43;
+
         amountOfCorrectionBytes = 28;
+
         return 37;
     }
     else if (amountOfBits < 16816)
     {
         maxAmountOfBits = 16816;
         amountOfBlocks = 45;
+
         amountOfCorrectionBytes = 28;
+
         return 38;
     }
     else if (amountOfBits < 17728)
     {
         maxAmountOfBits = 17728;
         amountOfBlocks = 47;
+
         amountOfCorrectionBytes = 28;
+
         return 39;
     }
     else if (amountOfBits < 18672)
     {
         maxAmountOfBits = 18672;
         amountOfBlocks = 49;
+
         amountOfCorrectionBytes = 28;
         return 40;
     }
@@ -419,7 +503,9 @@ void DataEncoder::bitToIntConverter(const vector<bool> &sequenceOfBit, vector<in
         sequenceOfByte.push_back(sum);
     }
 }
+
 void DataEncoder::blockFiller(const vector<int> &sequenceOfByte, vector<vector<int>> &blocks,
+
                               int amountOfBlocks, int byteInBlock, int additionalBlocks)
 { //Функция для заполнения блоков последовательностью байт
     int byteIndex = 0; //индекс заполнения байтов
@@ -442,6 +528,7 @@ void DataEncoder::blockFiller(const vector<int> &sequenceOfByte, vector<vector<i
         }
     }
 }
+
 void DataEncoder::polynomGenerator(vector<int> &generatingPolynom)
 {
     if (amountOfCorrectionBytes == 10)

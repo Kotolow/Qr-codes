@@ -1,17 +1,23 @@
-﻿#pragma once
+
+#pragma once
+
 #include <vector>
 class string;
 
 class DataEncoder
 {
   public:
+
     std::vector<int> sequenceFinal; // конечная последовательность байт
+
     DataEncoder(const std::string &tx);
     ~DataEncoder() = default;
 
   private:
+
     std::vector<bool> sequenceOfBit; //последовательность бит
     std::vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
+
     int amount; //кол-во символов в тексте
     int version; //номер версии
     int amountOfBits; //кол-во бит в тексте
@@ -21,6 +27,7 @@ class DataEncoder
     int amountOfBlocks; //кол-во блоков байт
     int byteInBlock; //кол-во байт в нормальном блоке
     int additionalBlocks; //кол-во дополненных блоков(бит на 1 больше чем в обычном)
+
     int amountOfCorrectionBytes; //кол-во байтов коррекции
     std::vector<std::vector<int>> blocks; //массив блоков
     std::vector<int> generatingPolynom; //генерирующий многочлен
@@ -30,6 +37,7 @@ class DataEncoder
     void binaryConverter(const std::string &tx, std::vector<bool> &sequenceOfBit, int amount);
     int versionNumber(int amountOfBits, int &maxAmountOfBits, int &amountOfBlocks,
                       int &amountOfCorrectionBytes);
+
     void intToBinary(int amount, int amountOfData, std::vector<bool> &serviceInf);
     void addition1();
     void addition2();
@@ -37,6 +45,7 @@ class DataEncoder
                            int maxAmountOfBits);
     void blockFiller(const std::vector<int> &sequenceOfByte, std::vector<std::vector<int>> &blocks,
                      int amountOfBlocks, int byteInBlock, int additionalBlocks);
+
     void polynomGenerator(std::vector<int> &generatingPolynom);
     int galua(int num);
     int galuaReverse(int num);
@@ -46,4 +55,5 @@ class DataEncoder
     void blocksMerging(std::vector<int> &sSequenceFinal,
                        const std::vector<std::vector<int>> &correctionByteBlocks,
                        const std::vector<std::vector<int>> &blocks);
+
 };
