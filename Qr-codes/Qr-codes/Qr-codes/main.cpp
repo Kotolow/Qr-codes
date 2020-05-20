@@ -14,6 +14,16 @@ int main(int argc, char *argv[])
     {
         cout << sequence.sequenceFinal[i] << ' ';
     }
+    cout << endl << sequence.sizeOfCanvas;
+    cout << endl << endl << "Qr-code:" << endl << endl;
+    for (int i = 0; i < sequence.sizeOfCanvas; ++i)
+    {
+        for (int j = 0; j < sequence.sizeOfCanvas; ++j)
+        {
+            cout << sequence.qrCode[i][j] << ' ';
+        }
+        cout << endl;
+    }
     system("pause");
     return 0;
 }
