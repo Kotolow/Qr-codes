@@ -1,4 +1,6 @@
-﻿#include <iostream>
+
+
+#include <iostream>
 #include <string>
 
 #include "dataEncoder.h"
