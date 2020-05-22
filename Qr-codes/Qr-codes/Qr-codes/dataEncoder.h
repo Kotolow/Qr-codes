@@ -2,14 +2,12 @@
 
 #pragma once
 
-
 #include <vector>
-class string;
+#include <string>;
 
 class DataEncoder
 {
   public:
-
     std::vector<std::vector<int>> qrCode; // Qr код, представленный ввиде двумерной матрицы
     int sizeOfCanvas; //размер Qr-кода
 
@@ -19,8 +17,6 @@ class DataEncoder
     ~DataEncoder() = default;
 
   private:
-
-
     std::vector<bool> sequenceOfBit; //последовательность бит
     std::vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
 
@@ -43,7 +39,6 @@ class DataEncoder
 
     std::vector<int> positionOfCorrectionPattern; //ветор, хранящий позиции корректирующиих узоров
     std::vector<bool> finalBits; //последовательность бит, заносимая в qr-код
-
 
   private:
     void binaryConverter(const std::string &tx, std::vector<bool> &sequenceOfBit, int amount);
@@ -75,5 +70,4 @@ class DataEncoder
     void byteToBit(const std::vector<int> &sSequenceFinal, std::vector<bool> &sFinalBits);
     void qrCodeFiller(std::vector<std::vector<int>> &sQrCode, const int &sSizeOfCanvas,
                       const std::vector<int> &sPositionOfCorrectionPattern);
-
 };
