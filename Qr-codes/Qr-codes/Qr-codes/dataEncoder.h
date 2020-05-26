@@ -1,20 +1,19 @@
 
+
 #pragma once
 
 #include <vector>
-class string;
+#include <string>;
 
 class DataEncoder
 {
   public:
-
-    std::vector<int> sequenceFinal; // конечная последовательность байт
+    void print(const std::vector<std::vector<int>> &sQrCode); //метод вывода Qr-кода
 
     DataEncoder(const std::string &tx);
     ~DataEncoder() = default;
 
   private:
-
     std::vector<bool> sequenceOfBit; //последовательность бит
     std::vector<int> sequenceOfByte; //последовательность байт для блоков коррекции
 
@@ -28,10 +27,18 @@ class DataEncoder
     int byteInBlock; //кол-во байт в нормальном блоке
     int additionalBlocks; //кол-во дополненных блоков(бит на 1 больше чем в обычном)
 
+    int amountOfCorrectingPattern; //кол-во выравнивающих узоров
+
     int amountOfCorrectionBytes; //кол-во байтов коррекции
     std::vector<std::vector<int>> blocks; //массив блоков
     std::vector<int> generatingPolynom; //генерирующий многочлен
     std::vector<std::vector<int>> correctionByteBlocks; //блоки байтов коррекции
+
+    std::vector<int> positionOfCorrectionPattern; //ветор, хранящий позиции корректирующиих узоров
+    std::vector<bool> finalBits; //последовательность бит, заносимая в qr-код
+    std::vector<std::vector<int>> qrCode; // Qr код, представленный ввиде двумерной матрицы
+    int sizeOfCanvas; //размер Qr-кода
+    std::vector<int> sequenceFinal; // конечная последовательность байт
 
   private:
     void binaryConverter(const std::string &tx, std::vector<bool> &sequenceOfBit, int amount);
@@ -56,4 +63,11 @@ class DataEncoder
                        const std::vector<std::vector<int>> &correctionByteBlocks,
                        const std::vector<std::vector<int>> &blocks);
 
+    void correctionPatternFiller(std::vector<int> &sPositionOfCorrectionPattern);
+    void sizeOfCanvasFinder(int &sSizeOfCanvas,
+                            const std::vector<int> &sPositionOfCorrectionPattern,
+                            int &sAmountOfCorrectingPattern);
+    void byteToBit(const std::vector<int> &sSequenceFinal, std::vector<bool> &sFinalBits);
+    void qrCodeFiller(std::vector<std::vector<int>> &sQrCode, const int &sSizeOfCanvas,
+                      const std::vector<int> &sPositionOfCorrectionPattern);
 };

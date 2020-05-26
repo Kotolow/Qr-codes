@@ -1,4 +1,5 @@
 ﻿#include "dataEncoder.h"
+#include <iostream>
 using namespace std;
 DataEncoder::DataEncoder(const std::string &tx)
 {
@@ -56,6 +57,11 @@ DataEncoder::DataEncoder(const std::string &tx)
     polynomGenerator(generatingPolynom);
     correctionByteGenerator(correctionByteBlocks, blocks, generatingPolynom);
     blocksMerging(sequenceFinal, correctionByteBlocks, blocks);
+    correctionPatternFiller(positionOfCorrectionPattern);
+    sizeOfCanvasFinder(sizeOfCanvas, positionOfCorrectionPattern, amountOfCorrectingPattern);
+    byteToBit(sequenceFinal, finalBits);
+    qrCodeFiller(qrCode, sizeOfCanvas, positionOfCorrectionPattern);
+    print(qrCode);
 }
 void DataEncoder::binaryConverter(const std::string &tx, vector<bool> &sequenceOfBit, int amount)
 /*функция предназначенная, для преобразования строки текста(текстового массива) в
@@ -1697,5 +1703,2273 @@ void DataEncoder::blocksMerging(vector<int> &sSequenceFinal,
         {
             sSequenceFinal.push_back(correctionByteBlocks[j][i]);
         }
+    }
+}
+void DataEncoder::correctionPatternFiller(vector<int> &sPositionOfCorrectionPattern)
+{
+    sPositionOfCorrectionPattern.resize(7);
+    switch (version)
+    {
+    case 2:
+        sPositionOfCorrectionPattern[0] = 18;
+        break;
+    case 3:
+        sPositionOfCorrectionPattern[0] = 22;
+        break;
+    case 4:
+        sPositionOfCorrectionPattern[0] = 26;
+        break;
+    case 5:
+        sPositionOfCorrectionPattern[0] = 30;
+        break;
+    case 6:
+        sPositionOfCorrectionPattern[0] = 34;
+        break;
+    case 7:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 22;
+        sPositionOfCorrectionPattern[2] = 38;
+        break;
+    case 8:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 24;
+        sPositionOfCorrectionPattern[2] = 42;
+        break;
+    case 9:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 46;
+        break;
+    case 10:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 28;
+        sPositionOfCorrectionPattern[2] = 50;
+        break;
+    case 11:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 54;
+        break;
+    case 12:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 32;
+        sPositionOfCorrectionPattern[2] = 58;
+        break;
+    case 13:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 34;
+        sPositionOfCorrectionPattern[2] = 62;
+        break;
+    case 14:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 46;
+        sPositionOfCorrectionPattern[3] = 66;
+        break;
+    case 15:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 34;
+        sPositionOfCorrectionPattern[2] = 62;
+        sPositionOfCorrectionPattern[3] = 90;
+        break;
+    case 16:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 50;
+        sPositionOfCorrectionPattern[3] = 74;
+        break;
+    case 17:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 78;
+        break;
+    case 18:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 56;
+        sPositionOfCorrectionPattern[3] = 82;
+        break;
+    case 19:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 58;
+        sPositionOfCorrectionPattern[3] = 86;
+        break;
+    case 20:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 34;
+        sPositionOfCorrectionPattern[2] = 62;
+        sPositionOfCorrectionPattern[3] = 90;
+        break;
+    case 21:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 28;
+        sPositionOfCorrectionPattern[2] = 50;
+        sPositionOfCorrectionPattern[3] = 72;
+        sPositionOfCorrectionPattern[4] = 94;
+        break;
+    case 22:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 50;
+        sPositionOfCorrectionPattern[3] = 74;
+        sPositionOfCorrectionPattern[4] = 98;
+        break;
+    case 23:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 78;
+        sPositionOfCorrectionPattern[4] = 102;
+        break;
+    case 24:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 28;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 80;
+        sPositionOfCorrectionPattern[4] = 106;
+        break;
+    case 25:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 32;
+        sPositionOfCorrectionPattern[2] = 58;
+        sPositionOfCorrectionPattern[3] = 84;
+        sPositionOfCorrectionPattern[4] = 110;
+        break;
+    case 26:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 58;
+        sPositionOfCorrectionPattern[3] = 86;
+        sPositionOfCorrectionPattern[4] = 114;
+        break;
+    case 27:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 34;
+        sPositionOfCorrectionPattern[2] = 62;
+        sPositionOfCorrectionPattern[3] = 90;
+        sPositionOfCorrectionPattern[4] = 118;
+        break;
+    case 28:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 50;
+        sPositionOfCorrectionPattern[3] = 74;
+        sPositionOfCorrectionPattern[4] = 98;
+        sPositionOfCorrectionPattern[5] = 122;
+        break;
+    case 29:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 78;
+        sPositionOfCorrectionPattern[4] = 102;
+        sPositionOfCorrectionPattern[5] = 126;
+        break;
+    case 30:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 52;
+        sPositionOfCorrectionPattern[3] = 78;
+        sPositionOfCorrectionPattern[4] = 104;
+        sPositionOfCorrectionPattern[5] = 130;
+        break;
+    case 31:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 56;
+        sPositionOfCorrectionPattern[3] = 82;
+        sPositionOfCorrectionPattern[4] = 108;
+        sPositionOfCorrectionPattern[5] = 134;
+        break;
+    case 32:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 34;
+        sPositionOfCorrectionPattern[2] = 60;
+        sPositionOfCorrectionPattern[3] = 86;
+        sPositionOfCorrectionPattern[4] = 112;
+        sPositionOfCorrectionPattern[5] = 138;
+        break;
+    case 33:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 58;
+        sPositionOfCorrectionPattern[3] = 86;
+        sPositionOfCorrectionPattern[4] = 114;
+        sPositionOfCorrectionPattern[5] = 142;
+        break;
+    case 34:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 34;
+        sPositionOfCorrectionPattern[2] = 62;
+        sPositionOfCorrectionPattern[3] = 90;
+        sPositionOfCorrectionPattern[4] = 118;
+        sPositionOfCorrectionPattern[5] = 146;
+        break;
+    case 35:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 78;
+        sPositionOfCorrectionPattern[4] = 102;
+        sPositionOfCorrectionPattern[5] = 126;
+        sPositionOfCorrectionPattern[6] = 150;
+        break;
+    case 36:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 24;
+        sPositionOfCorrectionPattern[2] = 50;
+        sPositionOfCorrectionPattern[3] = 76;
+        sPositionOfCorrectionPattern[4] = 102;
+        sPositionOfCorrectionPattern[5] = 128;
+        sPositionOfCorrectionPattern[6] = 154;
+        break;
+    case 37:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 28;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 80;
+        sPositionOfCorrectionPattern[4] = 106;
+        sPositionOfCorrectionPattern[5] = 132;
+        sPositionOfCorrectionPattern[6] = 158;
+        break;
+    case 38:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 32;
+        sPositionOfCorrectionPattern[2] = 58;
+        sPositionOfCorrectionPattern[3] = 84;
+        sPositionOfCorrectionPattern[4] = 110;
+        sPositionOfCorrectionPattern[5] = 136;
+        sPositionOfCorrectionPattern[6] = 162;
+        break;
+    case 39:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 26;
+        sPositionOfCorrectionPattern[2] = 54;
+        sPositionOfCorrectionPattern[3] = 82;
+        sPositionOfCorrectionPattern[4] = 110;
+        sPositionOfCorrectionPattern[5] = 138;
+        sPositionOfCorrectionPattern[6] = 166;
+        break;
+    case 40:
+        sPositionOfCorrectionPattern[0] = 6;
+        sPositionOfCorrectionPattern[1] = 30;
+        sPositionOfCorrectionPattern[2] = 58;
+        sPositionOfCorrectionPattern[3] = 86;
+        sPositionOfCorrectionPattern[4] = 114;
+        sPositionOfCorrectionPattern[5] = 142;
+        sPositionOfCorrectionPattern[6] = 170;
+        break;
+    default:
+        break;
+    }
+}
+void DataEncoder::sizeOfCanvasFinder(int &sSizeOfCanvas,
+                                     const vector<int> &sPositionOfCorrectionPattern,
+                                     int &sAmountOfCorrectingPattern)
+{
+    if (version == 1)
+    {
+        sSizeOfCanvas = 21 + 7 + 4;
+        sAmountOfCorrectingPattern = 0;
+    }
+    else
+    {
+        int max = 0;
+        sAmountOfCorrectingPattern = 0;
+        for (int i = 0; i < 7; ++i)
+        {
+            if (sPositionOfCorrectionPattern[i] > max)
+            {
+                max = sPositionOfCorrectionPattern[i];
+                ++sAmountOfCorrectingPattern;
+            }
+        }
+        sSizeOfCanvas = max + 7 + 4;
+    }
+}
+void DataEncoder::byteToBit(const vector<int> &sSequenceFinal, vector<bool> &sFinalBits)
+{ //функция для получения битовых значений, заносимых в qr-код
+    for (int r = 0; r < sSequenceFinal.size(); ++r)
+    {
+        for (int shift = 7, i = 0; shift >= 0; --shift, ++i)
+
+        {
+            sFinalBits.push_back(sSequenceFinal[r] & (1 << shift));
+        }
+    }
+}
+void DataEncoder::qrCodeFiller(vector<vector<int>> &sQrCode, const int &sSizeOfCanvas,
+                               const vector<int> &sPositionOfCorrectionPattern)
+{ //функция отвечающая за заполнение qr кода значениями, где 0 соответствует белому цвету, 1 -
+  //чёрному
+    sQrCode.resize(sSizeOfCanvas);
+    for (int i = 0; i < sSizeOfCanvas; ++i)
+    {
+        sQrCode[i].resize(sSizeOfCanvas);
+    }
+    for (int i = 0; i < sSizeOfCanvas; ++i)
+    {
+        for (int j = 0; j < sSizeOfCanvas; ++j)
+        {
+            sQrCode[i][j] = 2; //проверка на наличие присваивамого значения, т.к в qr-code могут
+                               //быть только 2 значения: 0 и 1
+        }
+    }
+    for (int i = 0; i < sSizeOfCanvas; ++i)
+    { //заполнение белым цветом полос рамки
+        sQrCode[0][i] = 0;
+        sQrCode[i][0] = 0;
+        sQrCode[1][i] = 0;
+        sQrCode[i][1] = 0;
+        sQrCode[sSizeOfCanvas - 1][i] = 0;
+        sQrCode[i][sSizeOfCanvas - 1] = 0;
+        sQrCode[sSizeOfCanvas - 2][i] = 0;
+        sQrCode[i][sSizeOfCanvas - 2] = 0;
+    }
+    //заполнение верхнего левого поискового узора
+    for (int i = 4; i <= 6; ++i)
+    {
+        for (int j = 4; j <= 6; ++j)
+        {
+            sQrCode[i][j] = 1;
+        }
+    }
+    for (int i = 3; i <= 7; ++i)
+    {
+        sQrCode[3][i] = 0;
+        sQrCode[i][3] = 0;
+        sQrCode[7][i] = 0;
+        sQrCode[i][7] = 0;
+    }
+    for (int i = 2; i <= 8; ++i)
+    {
+        sQrCode[2][i] = 1;
+        sQrCode[i][2] = 1;
+        sQrCode[8][i] = 1;
+        sQrCode[i][8] = 1;
+    }
+    for (int i = 2; i <= 9; ++i)
+    {
+        sQrCode[9][i] = 0;
+        sQrCode[i][9] = 0;
+    }
+    //верхний правый поисковый узор
+    for (int i = 4; i <= 6; ++i)
+    {
+        for (int j = sizeOfCanvas - 7; j <= sizeOfCanvas - 5; ++j)
+        {
+            sQrCode[i][j] = 1;
+        }
+    }
+    for (int i = sizeOfCanvas - 9; i <= sizeOfCanvas - 3; ++i)
+    {
+        sQrCode[2][i] = 1;
+        sQrCode[8][i] = 1;
+    }
+    for (int i = 2; i <= 8; ++i)
+    {
+        sQrCode[i][sizeOfCanvas - 3] = 1;
+        sQrCode[i][sizeOfCanvas - 9] = 1;
+    }
+    for (int i = sizeOfCanvas - 8; i <= sizeOfCanvas - 4; ++i)
+    {
+        sQrCode[3][i] = 0;
+        sQrCode[7][i] = 0;
+    }
+    for (int i = 3; i <= 7; ++i)
+    {
+        sQrCode[i][sizeOfCanvas - 4] = 0;
+        sQrCode[i][sizeOfCanvas - 8] = 0;
+    }
+    for (int i = 2; i <= 9; ++i)
+    {
+        sQrCode[i][sizeOfCanvas - 10] = 0;
+        sQrCode[9][sizeOfCanvas - i - 1] = 0;
+    }
+    //левый нижний поисковый узор
+    for (int i = sizeOfCanvas - 7; i <= sizeOfCanvas - 5; ++i)
+    {
+        for (int j = 4; j <= 6; ++j)
+        {
+            sQrCode[i][j] = 1;
+        }
+    }
+    for (int i = sizeOfCanvas - 8; i <= sizeOfCanvas - 4; ++i)
+    {
+        sQrCode[i][3] = 0;
+        sQrCode[i][7] = 0;
+    }
+    for (int i = 3; i <= 7; ++i)
+    {
+        sQrCode[sizeOfCanvas - 8][i] = 0;
+        sQrCode[sizeOfCanvas - 4][i] = 0;
+    }
+    for (int i = sizeOfCanvas - 9; i <= sizeOfCanvas - 3; ++i)
+    {
+        sQrCode[i][2] = 1;
+        sQrCode[i][8] = 1;
+    }
+    for (int i = 2; i <= 8; ++i)
+    {
+        sQrCode[sizeOfCanvas - 9][i] = 1;
+        sQrCode[sizeOfCanvas - 3][i] = 1;
+    }
+    for (int i = 2; i <= 9; ++i)
+    {
+        sQrCode[sizeOfCanvas - 10][i] = 0;
+        sQrCode[sizeOfCanvas - i - 1][9] = 0;
+    }
+    //выравнивающие узоры
+    if ((version >= 2) && (version < 6))
+    {
+        for (int i = 0; i < amountOfCorrectingPattern; ++i)
+        {
+            for (int j = 0; j < amountOfCorrectingPattern; ++j)
+            {
+                sQrCode[sPositionOfCorrectionPattern[i] + 2][sPositionOfCorrectionPattern[j] + 2] =
+                    1;
+                for (int k = sPositionOfCorrectionPattern[i] + 1;
+                     k <= sPositionOfCorrectionPattern[i] + 3; ++k)
+                {
+                    sQrCode[sPositionOfCorrectionPattern[j] + 1][k] = 0;
+                    sQrCode[sPositionOfCorrectionPattern[j] + 3][k] = 0;
+                }
+                for (int k = sPositionOfCorrectionPattern[j] + 1;
+                     k <= sPositionOfCorrectionPattern[j] + 3; ++k)
+                {
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 1] = 0;
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 3] = 0;
+                }
+                for (int k = sPositionOfCorrectionPattern[i];
+                     k <= sPositionOfCorrectionPattern[i] + 4; ++k)
+                {
+                    sQrCode[sPositionOfCorrectionPattern[j]][k] = 1;
+                    sQrCode[sPositionOfCorrectionPattern[j] + 4][k] = 1;
+                }
+                for (int k = sPositionOfCorrectionPattern[j];
+                     k <= sPositionOfCorrectionPattern[j] + 4; ++k)
+                {
+                    sQrCode[k][sPositionOfCorrectionPattern[i]] = 1;
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 4] = 1;
+                }
+            }
+        }
+    }
+    else if (version >= 6)
+    {
+        for (int i = 0; i < amountOfCorrectingPattern; ++i)
+        {
+            for (int j = 1; j < amountOfCorrectingPattern - 1; ++j)
+            {
+                sQrCode[sPositionOfCorrectionPattern[i] + 2][sPositionOfCorrectionPattern[j] + 2] =
+                    1;
+                for (int k = sPositionOfCorrectionPattern[i] + 1;
+                     k <= sPositionOfCorrectionPattern[i] + 3; ++k)
+                {
+                    sQrCode[sPositionOfCorrectionPattern[j] + 1][k] = 0;
+                    sQrCode[sPositionOfCorrectionPattern[j] + 3][k] = 0;
+                }
+                for (int k = sPositionOfCorrectionPattern[j] + 1;
+                     k <= sPositionOfCorrectionPattern[j] + 3; ++k)
+                {
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 1] = 0;
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 3] = 0;
+                }
+                for (int k = sPositionOfCorrectionPattern[i];
+                     k <= sPositionOfCorrectionPattern[i] + 4; ++k)
+                {
+                    sQrCode[sPositionOfCorrectionPattern[j]][k] = 1;
+                    sQrCode[sPositionOfCorrectionPattern[j] + 4][k] = 1;
+                }
+                for (int k = sPositionOfCorrectionPattern[j];
+                     k <= sPositionOfCorrectionPattern[j] + 4; ++k)
+                {
+                    sQrCode[k][sPositionOfCorrectionPattern[i]] = 1;
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 4] = 1;
+                }
+            }
+        }
+        for (int i = amountOfCorrectingPattern - 1; i < amountOfCorrectingPattern; ++i)
+        {
+            for (int j = 1; j < amountOfCorrectingPattern - 1; ++j)
+            {
+                sQrCode[sPositionOfCorrectionPattern[i] + 2][sPositionOfCorrectionPattern[j] + 2] =
+                    1;
+                for (int k = sPositionOfCorrectionPattern[i] + 1;
+                     k <= sPositionOfCorrectionPattern[i] + 3; ++k)
+                {
+                    sQrCode[sPositionOfCorrectionPattern[j] + 1][k] = 0;
+                    sQrCode[sPositionOfCorrectionPattern[j] + 3][k] = 0;
+                }
+                for (int k = sPositionOfCorrectionPattern[j] + 1;
+                     k <= sPositionOfCorrectionPattern[j] + 3; ++k)
+                {
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 1] = 0;
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 3] = 0;
+                }
+                for (int k = sPositionOfCorrectionPattern[i];
+                     k <= sPositionOfCorrectionPattern[i] + 4; ++k)
+                {
+                    sQrCode[sPositionOfCorrectionPattern[j]][k] = 1;
+                    sQrCode[sPositionOfCorrectionPattern[j] + 4][k] = 1;
+                }
+                for (int k = sPositionOfCorrectionPattern[j];
+                     k <= sPositionOfCorrectionPattern[j] + 4; ++k)
+                {
+                    sQrCode[k][sPositionOfCorrectionPattern[i]] = 1;
+                    sQrCode[k][sPositionOfCorrectionPattern[i] + 4] = 1;
+                }
+            }
+        }
+    }
+    //полосы синхронизации
+    for (int i = 10; i < sSizeOfCanvas - 10; ++i)
+    {
+        if ((sQrCode[i][8] == 2) && (i % 2 == 0))
+            sQrCode[i][8] = 1;
+        else if ((sQrCode[i][8] == 2) && (i % 2 != 0))
+            sQrCode[i][8] = 0;
+        if ((sQrCode[8][i] == 2) && (i % 2 == 0))
+            sQrCode[8][i] = 1;
+        else if ((sQrCode[8][i] == 2) && (i % 2 != 0))
+            sQrCode[8][i] = 0;
+    }
+    //коды версии
+    if (version == 7)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 8)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 9)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 10)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 11)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 12)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 13)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 14)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 15)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 16)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 17)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 18)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 19)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 20)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 21)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 22)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 23)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 24)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 25)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 26)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 27)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 28)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 29)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 30)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 31)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 1;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 0;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 0;
+    }
+    if (version == 32)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 33)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 34)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 35)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 1;
+        sQrCode[4][sSizeOfCanvas - 12] = 1;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 1;
+        sQrCode[sSizeOfCanvas - 12][4] = 1;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 36)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 37)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 0;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 0;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 1;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 1;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 38)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 0;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 1;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 0;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 1;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 0;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 0;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 1;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 1;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 39)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 0;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 1;
+        sQrCode[7][sSizeOfCanvas - 13] = 0;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 0;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 1;
+        sQrCode[sSizeOfCanvas - 13][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 1;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 1;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 0;
+        sQrCode[4][sSizeOfCanvas - 11] = 1;
+        sQrCode[5][sSizeOfCanvas - 11] = 0;
+        sQrCode[6][sSizeOfCanvas - 11] = 1;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 0;
+        sQrCode[sSizeOfCanvas - 11][4] = 1;
+        sQrCode[sSizeOfCanvas - 11][5] = 0;
+        sQrCode[sSizeOfCanvas - 11][6] = 1;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    if (version == 40)
+    {
+        sQrCode[2][sSizeOfCanvas - 13] = 1;
+        sQrCode[3][sSizeOfCanvas - 13] = 1;
+        sQrCode[4][sSizeOfCanvas - 13] = 1;
+        sQrCode[5][sSizeOfCanvas - 13] = 0;
+        sQrCode[6][sSizeOfCanvas - 13] = 0;
+        sQrCode[7][sSizeOfCanvas - 13] = 1;
+        sQrCode[sSizeOfCanvas - 13][2] = 1;
+        sQrCode[sSizeOfCanvas - 13][3] = 1;
+        sQrCode[sSizeOfCanvas - 13][4] = 1;
+        sQrCode[sSizeOfCanvas - 13][5] = 0;
+        sQrCode[sSizeOfCanvas - 13][6] = 0;
+        sQrCode[sSizeOfCanvas - 13][7] = 1;
+
+        sQrCode[2][sSizeOfCanvas - 12] = 0;
+        sQrCode[3][sSizeOfCanvas - 12] = 0;
+        sQrCode[4][sSizeOfCanvas - 12] = 0;
+        sQrCode[5][sSizeOfCanvas - 12] = 1;
+        sQrCode[6][sSizeOfCanvas - 12] = 0;
+        sQrCode[7][sSizeOfCanvas - 12] = 0;
+        sQrCode[sSizeOfCanvas - 12][2] = 0;
+        sQrCode[sSizeOfCanvas - 12][3] = 0;
+        sQrCode[sSizeOfCanvas - 12][4] = 0;
+        sQrCode[sSizeOfCanvas - 12][5] = 1;
+        sQrCode[sSizeOfCanvas - 12][6] = 0;
+        sQrCode[sSizeOfCanvas - 12][7] = 0;
+
+        sQrCode[2][sSizeOfCanvas - 11] = 0;
+        sQrCode[3][sSizeOfCanvas - 11] = 1;
+        sQrCode[4][sSizeOfCanvas - 11] = 0;
+        sQrCode[5][sSizeOfCanvas - 11] = 1;
+        sQrCode[6][sSizeOfCanvas - 11] = 0;
+        sQrCode[7][sSizeOfCanvas - 11] = 1;
+        sQrCode[sSizeOfCanvas - 11][2] = 0;
+        sQrCode[sSizeOfCanvas - 11][3] = 1;
+        sQrCode[sSizeOfCanvas - 11][4] = 0;
+        sQrCode[sSizeOfCanvas - 11][5] = 1;
+        sQrCode[sSizeOfCanvas - 11][6] = 0;
+        sQrCode[sSizeOfCanvas - 11][7] = 1;
+    }
+    //заполнение кода маски и кода уровня коррекции
+    sQrCode[10][2] = 1;
+    sQrCode[10][3] = 0;
+    sQrCode[10][4] = 1;
+    sQrCode[10][5] = 0;
+    sQrCode[10][6] = 1;
+    sQrCode[10][7] = 0;
+    sQrCode[10][9] = 0;
+    sQrCode[10][10] = 0;
+    sQrCode[9][10] = 0;
+    sQrCode[7][10] = 0;
+    sQrCode[6][10] = 1;
+    sQrCode[5][10] = 0;
+    sQrCode[4][10] = 0;
+    sQrCode[3][10] = 1;
+    sQrCode[2][10] = 0;
+    sQrCode[sSizeOfCanvas - 3][10] = 1;
+    sQrCode[sSizeOfCanvas - 4][10] = 0;
+    sQrCode[sSizeOfCanvas - 5][10] = 1;
+    sQrCode[sSizeOfCanvas - 6][10] = 0;
+    sQrCode[sSizeOfCanvas - 7][10] = 1;
+    sQrCode[sSizeOfCanvas - 8][10] = 0;
+    sQrCode[sSizeOfCanvas - 9][10] = 0;
+    sQrCode[sSizeOfCanvas - 10][10] = 1;
+    sQrCode[10][sSizeOfCanvas - 10] = 0;
+    sQrCode[10][sSizeOfCanvas - 9] = 0;
+    sQrCode[10][sSizeOfCanvas - 8] = 0;
+    sQrCode[10][sSizeOfCanvas - 7] = 1;
+    sQrCode[10][sSizeOfCanvas - 6] = 0;
+    sQrCode[10][sSizeOfCanvas - 5] = 0;
+    sQrCode[10][sSizeOfCanvas - 4] = 1;
+    sQrCode[10][sSizeOfCanvas - 3] = 0;
+    //заполнение битами данных
+    int amountOfCouples = (sSizeOfCanvas - 5) / 2;
+    int fillerIndex = 0;
+    int currentCouple = 1;
+    for (currentCouple = 1; currentCouple <= 4; ++currentCouple)
+    {
+        if (fillerIndex >= finalBits.size() - 1)
+            break;
+        if (currentCouple % 2 != 0)
+        {
+            for (int line = sSizeOfCanvas - 3; line >= 11; --line)
+            {
+                if (fillerIndex >= finalBits.size() - 1)
+                    break;
+                if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+                if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+            }
+        }
+        if (currentCouple % 2 == 0)
+        {
+            for (int line = 11; line <= sSizeOfCanvas - 3; ++line)
+            {
+                if (fillerIndex >= finalBits.size() - 1)
+                    break;
+                if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+                if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+            }
+        }
+    }
+    for (currentCouple = 4; currentCouple <= amountOfCouples - 3; ++currentCouple)
+    {
+        if (fillerIndex >= finalBits.size() - 1)
+            break;
+        if (currentCouple % 2 != 0)
+        {
+            if (fillerIndex >= finalBits.size() - 1)
+                break;
+            for (int line = sSizeOfCanvas - 3; line >= 2; --line)
+            {
+                if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+                if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+            }
+        }
+        if (currentCouple % 2 == 0)
+        {
+            for (int line = 2; line <= sSizeOfCanvas - 3; ++line)
+            {
+                if (fillerIndex >= finalBits.size() - 1)
+                    break;
+                if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 1 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 1 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+                if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+            }
+        }
+    }
+    for (currentCouple = amountOfCouples - 3; currentCouple <= amountOfCouples; ++currentCouple)
+    {
+        if (fillerIndex >= finalBits.size())
+            break;
+        if (currentCouple % 2 != 0)
+        {
+            for (int line = sSizeOfCanvas - 3; line >= 2; --line)
+            {
+                if (fillerIndex >= finalBits.size())
+                    break;
+                if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+                if ((sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 3 - 2 * currentCouple) % 2 != 0))
+                    sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] = finalBits[fillerIndex++];
+                else if ((sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 3 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+            }
+        }
+        if (currentCouple % 2 == 0)
+        {
+            for (int line = 2; line <= sSizeOfCanvas - 3; ++line)
+            {
+                if (fillerIndex >= finalBits.size() - 1)
+                    break;
+                if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 != 0))
+                {
+                    sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = finalBits[fillerIndex];
+                    ++fillerIndex;
+                }
+                else if ((sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 2 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 2 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+
+                if ((sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] == 2) &&
+                    ((line + sSizeOfCanvas - 3 - 2 * currentCouple) % 2 != 0))
+                {
+                    sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] = finalBits[fillerIndex];
+                    ++fillerIndex;
+                }
+                else if ((sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] == 2) &&
+                         ((line + sSizeOfCanvas - 3 - 2 * currentCouple) % 2 == 0))
+                {
+                    if (finalBits[fillerIndex] == 0)
+                    {
+                        sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] = 1;
+                        ++fillerIndex;
+                    }
+                    else
+                    {
+                        sQrCode[line][sSizeOfCanvas - 3 - 2 * currentCouple] = 0;
+                        ++fillerIndex;
+                    }
+                }
+            }
+        }
+    }
+    //замена пустых значений нулями  и использование на них маски
+    for (int i = 0; i < sSizeOfCanvas; ++i)
+    {
+        for (int j = 0; j < sSizeOfCanvas; ++j)
+        {
+            if (qrCode[i][j] == 2)
+            {
+                if ((i + j) % 2 != 0)
+                    qrCode[i][j] = 0;
+                else
+                    qrCode[i][j] = 1;
+            }
+        }
+    }
+}
+void DataEncoder::print(const vector<vector<int>> &sQrCode)
+{
+    std::cout << "Qr-code:" << endl << endl;
+    for (int i = 0; i < sizeOfCanvas; ++i)
+    {
+        for (int j = 0; j < sizeOfCanvas; ++j)
+        {
+            if (sQrCode[i][j] == 1)
+            {
+                cout << static_cast<char>(0);
+            }
+            else
+                cout << static_cast<char>(219);
+        }
+        cout << endl;
     }
 }
