@@ -1,4 +1,6 @@
-﻿#include <iostream>
+
+#include <iostream>
+
 #include <string>
 
 #include "dataEncoder.h"
@@ -11,6 +13,7 @@ int main(int argc, char *argv[])
     DataEncoder sequence(tx);
     cout << "Final sequence of bytes: " << endl;
     for (int i = 0; i < sequence.sequenceFinal.size(); ++i)
+
     {
         cout << sequence.sequenceFinal[i] << ' ';
     }
@@ -23,6 +26,7 @@ int main(int argc, char *argv[])
             cout << sequence.qrCode[i][j] << ' ';
         }
         cout << endl;
+
     }
     system("pause");
     return 0;
