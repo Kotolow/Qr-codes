@@ -1,4 +1,5 @@
 ﻿#include "dataEncoder.h"
+#include <iostream>
 using namespace std;
 DataEncoder::DataEncoder(const std::string &tx)
 {
@@ -60,6 +61,7 @@ DataEncoder::DataEncoder(const std::string &tx)
     sizeOfCanvasFinder(sizeOfCanvas, positionOfCorrectionPattern, amountOfCorrectingPattern);
     byteToBit(sequenceFinal, finalBits);
     qrCodeFiller(qrCode, sizeOfCanvas, positionOfCorrectionPattern);
+    print(qrCode);
 }
 void DataEncoder::binaryConverter(const std::string &tx, vector<bool> &sequenceOfBit, int amount)
 /*функция предназначенная, для преобразования строки текста(текстового массива) в
@@ -3952,5 +3954,22 @@ void DataEncoder::qrCodeFiller(vector<vector<int>> &sQrCode, const int &sSizeOfC
                     qrCode[i][j] = 1;
             }
         }
+    }
+}
+void DataEncoder::print(const vector<vector<int>> &sQrCode)
+{
+    std::cout << "Qr-code:" << endl << endl;
+    for (int i = 0; i < sizeOfCanvas; ++i)
+    {
+        for (int j = 0; j < sizeOfCanvas; ++j)
+        {
+            if (sQrCode[i][j] == 1)
+            {
+                cout << static_cast<char>(0);
+            }
+            else
+                cout << static_cast<char>(219);
+        }
+        cout << endl;
     }
 }
