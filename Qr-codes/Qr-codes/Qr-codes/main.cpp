@@ -1,6 +1,7 @@
-﻿
+
 
 #include <iostream>
+
 #include <string>
 
 #include "dataEncoder.h"
@@ -13,6 +14,7 @@ int main(int argc, char *argv[])
     cout << "Enter the text you want to converte: " << endl;
     getline(cin, tx);
     DataEncoder sequence(tx);
+
     system("pause");
     return 0;
 }
